@@ -2,7 +2,7 @@
 
 # ansible role for setting up rspamd and unbond
 
-Configurable ansible role for setting up unbound and rspamd.
+Configurable ansible role for setting up unbound asa a recursive caching DNS resolver and rspamd.
 Works with
 
 - openSUSE Leap 15.4 -> tested
@@ -17,7 +17,7 @@ Firewall configuration (disable by default)
 
 | Value | Description | Default |
 |-------|-------------|---------|
-|`fangfrisch_prefix` | Where to set up fangfrisch | /opt/fangfrisch |
+|`unbound_nameservers` | Nameservers to ask | "45.11.45.11 # DNS.SB" |
 
 
 ## Example Playbook

@@ -1,0 +1,50 @@
+---
+- name: Ensure unbound + rspamd are installed.
+  package:
+    name:
+      - unbound
+      - rspamd
+      - wget
+    state: present
+
+- name: make the local server active by adding it to resolv.conf
+  ansible.builtin.lineinfile:
+    path: /etc/sysconfig/network/config
+    regexp: '^NETCONFIG\_DNS\_STATIC\_SERVERS'
+    line: 'NETCONFIG_DNS_STATIC_SERVERS="::1"'
+
+- name: enable automatic start of unbound
+  ansible.builtin.systemd:
+    enabled: yes
+    masked: no
+    name: unbound
+
+- name: trigger regeneration of resolv.conf
+  ansible.builtin.command: "netconfig update -f"
+
+- name: create an unbound configuration file
+  ansible.builtin.template:
+    src: localsite.conf.j2
+    dest: /etc/unbound/conf.d/localsite.conf
+    owner: root
+    group: unbound
+    mode: '0644'
+
+- name: get current root.key
+  ansible.builtin.get_url:
+    url: https://www.internic.net/domain/named.cache
+    dest: /etc/unbound/root.hints
+    group: unbound
+    mode: '0644'
+
+- name: Add amonthly cron-job to keep it up-to-date
+  ansible.builtin.cron:
+    name: "unbound-root-hints"
+    special_time: monthly
+    state: present
+    job: "sudo -u unbound wget https://www.internic.net/domain/named.cache -O /etc/unbound/root.hints"
+
+- name: restart unbound
+  ansible.builtin.systemd:
+    state: restarted
+    name: unbound

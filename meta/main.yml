@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  author: Florian Goth
+  role_name: rspamd
+  namespace: geekoops
+  description: Configurable rspamd and unbound setup role
+  company: SUSE
+  issue_tracker_url:
+
+  license: license MIT
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: opensuse
+      versions:
+#        - 15.3
+        - 15.4
+#    - name: debian
+#      versions:
+#        - bullseye
+
+#  galaxy_tags:
+#    - apache
+#    - lamp
+
+dependencies: []

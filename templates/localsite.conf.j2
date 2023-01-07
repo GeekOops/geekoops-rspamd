@@ -1,0 +1,19 @@
+server:
+prefetch: yes
+qname-minimisation: yes
+use-caps-for-id: yes
+statistics-interval: 600
+statistics-cumulative: yes
+root-hints: "/etc/unbound/root.hints"
+hide-identity: yes
+hide-version: yes
+edns-buffer-size: 1232
+msg-cache-size: 256M
+rrset-cache-size: 512M
+outgoing-range: 8192
+num-queries-per-thread: 4096
+forward-zone:
+  name: "."
+  {% for server in unbound_nameserver %}
+  forward-addr: {{ server }}
+  {% endfor %}

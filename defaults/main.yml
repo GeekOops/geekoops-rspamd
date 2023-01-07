@@ -1,0 +1,6 @@
+---
+unbound_nameserver:
+  - 185.222.222.222 #dns.sb
+  - 45.11.45.11 #dns.sb
+  - 9.9.9.9@53#dns.quad9.net
+  - 1.1.1.1 # cloudflare
