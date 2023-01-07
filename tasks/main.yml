@@ -48,3 +48,22 @@
   ansible.builtin.systemd:
     state: restarted
     name: unbound
+
+- name: set up rspamd redis connection
+  ansible.builtin.template:
+    src: redis.conf.j2
+    dest: /etc/rspamd/local.d/redis.conf
+    owner: root
+    group: unbound
+    mode: '0644'
+
+- name: adding '{{ rspamd_user }}' to group redis
+  user:
+    name: '{{ rspamd_user }}'
+    groups: redis
+    append: yes
+
+- name: restart rspamd
+  ansible.builtin.systemd:
+    state: restarted
+    name: rspamd
