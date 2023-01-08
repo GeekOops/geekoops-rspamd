@@ -1,0 +1,22 @@
+clamav {
+    action = "reject";
+    scan_mime_parts_only = false;
+    # If `max_size` is set, messages > n bytes in size are not scanned
+    #max_size = 20000000;
+    # symbol to add (add it to metric if you want non-zero weight)
+    symbol = "CLAM_VIRUS";
+    # type of scanner: "clamav", "fprot", "sophos" or "savapi"
+    type = "clamav";
+    # You can enable logging for clean messages
+    #log_clean = true;
+    # servers to query (if port is unspecified, scanner-specific default is used)
+    # can be specified multiple times to pool servers
+    # can be set to a path to a unix socket
+    servers = "/var/run/clamav/clamd-socket";
+    # if `patterns` is specified virus name will be matched against provided regexes and the related
+    # symbol will be yielded if a match is found. If no match is found, default symbol is yielded.
+    patterns {
+      # symbol_name = "pattern";
+      JUST_EICAR = '^Eicar-Test-Signature$';
+    }
+}

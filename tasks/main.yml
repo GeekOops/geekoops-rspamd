@@ -54,12 +54,59 @@
     src: redis.conf.j2
     dest: /etc/rspamd/local.d/redis.conf
     owner: root
-    group: unbound
+    group: _rspamd
     mode: '0644'
 
-- name: adding '{{ rspamd_user }}' to group redis
+- name: create logging configuration
+  ansible.builtin.template:
+    src: logging.inc.j2
+    dest: /etc/rspamd/local.d/logging.inc
+    owner: root
+    group: _rspamd
+    mode: '0644'
+
+- name: create milter_headers
+  ansible.builtin.template:
+    src: milter_headers.conf.j2
+    dest: /etc/rspamd/local.d/milter_headers.conf
+    owner: root
+    group: _rspamd
+    mode: '0644'
+
+#    rspamadm pw {{ rspamd_password }} > /tmp/pw.txt
+#    echo "password = " >> /etc/rspamd/local.d/worker-controller.inc
+#    truncate -
+#    cat /tmp/pw.txt 
+
+- name: NOT IDEMPOTENT. set password of the rspamd web-interface.
+  ansible.builtin.shell:  |
+    echo password = \"$( rspamadm pw -p {{ rspamd_password }} )\" >> /etc/rspamd/local.d/worker-controller.inc
+
+- name: Configure whitelists and blacklists
+  ansible.builtin.template:
+    src: "{{item}}.j2"
+    dest: "/etc/rspamd/local.d/{{item}}"
+    owner: root
+    group: _rspamd
+    mode: '0644'
+  loop:
+    - multimap.conf
+    - whitelist_ip.map
+    - whitelist_from.map
+    - blacklist_ip.map
+    - blacklist_from.map
+
+- name: set up rspamd Antivirus plugin to connect with clamav
+  ansible.builtin.template:
+    src: antivirus.conf.j2
+    dest: /etc/rspamd/local.d/antivirus.conf
+    owner: root
+    group: _rspamd
+    mode: '0644'
+
+- name: adding "{{ rspamd_user }}" to group redis
   user:
-    name: '{{ rspamd_user }}'
+    name: "{{ rspamd_user }}"
     groups: redis
     append: yes
 

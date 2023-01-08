@@ -6,3 +6,4 @@ unbound_nameserver:
   - 1.1.1.1 # cloudflare
 
 rspamd_redis_connection: "/var/run/redis/rspamd.sock"
+rspamd_password: "Q1" # For whatever reason this seems to be the password that my SuSE has by default.
