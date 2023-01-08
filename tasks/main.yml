@@ -73,11 +73,6 @@
     group: _rspamd
     mode: '0644'
 
-#    rspamadm pw {{ rspamd_password }} > /tmp/pw.txt
-#    echo "password = " >> /etc/rspamd/local.d/worker-controller.inc
-#    truncate -
-#    cat /tmp/pw.txt 
-
 - name: NOT IDEMPOTENT. set password of the rspamd web-interface.
   ansible.builtin.shell:  |
     echo password = \"$( rspamadm pw -p {{ rspamd_password }} )\" >> /etc/rspamd/local.d/worker-controller.inc
@@ -103,6 +98,31 @@
     owner: root
     group: _rspamd
     mode: '0644'
+
+- name: create DKIM key directory
+  ansible.builtin.file:
+    path: /var/lib/rspamd/dkim
+    state: directory
+    owner: "{{ rspamd_user }}"
+    group: "{{ rspamd_user }}"
+    mode: '0755'
+
+- name: Create DKIM key
+  ansible.builtin.shell:  |
+    rspamadm dkim_keygen -b {{ rspamd_dkim_key_length }} -s {{ rspamd_dkim_key_selector }} -k /var/lib/rspamd/dkim/{{ rspamd_dkim_key_selector }}.key > /var/lib/rspamd/dkim/{{ rspamd_dkim_key_selector }}.txt
+    chown -R {{ rspamd_user }}:{{ rspamd_user }} /var/lib/rspamd/dkim
+    chmod 440 /var/lib/rspamd/dkim/*
+
+- name: set up rspamd dkim signing configuration
+  ansible.builtin.template:
+    src: "{{item}}.j2"
+    dest: "/etc/rspamd/local.d/{{item}}"
+    owner: root
+    group: _rspamd
+    mode: '0644'
+  loop:
+    - dkim_signing.conf
+    - arc.conf
 
 - name: adding "{{ rspamd_user }}" to group redis
   user:

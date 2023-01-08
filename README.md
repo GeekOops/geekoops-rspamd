@@ -2,7 +2,13 @@
 
 # ansible role for setting up rspamd and unbond
 
-Configurable ansible role for setting up unbound asa a recursive caching DNS resolver and rspamd.
+Configurable ansible role for setting up unbound as a recursive caching DNS resolver and rspamd.
+rspamd triggers:
+
+- virus check with clamav
+- spam detection
+- dkim signing
+
 Works with
 
 - openSUSE Leap 15.4 -> tested
@@ -18,7 +24,10 @@ Firewall configuration (disable by default)
 | Value | Description | Default |
 |-------|-------------|---------|
 |`unbound_nameservers` | Nameservers to ask | "45.11.45.11 # DNS.SB" |
-
+|`rspamd_redis_connection`| rspamd redis socket |  "/var/run/redis/rspamd.sock" |
+|`rspamd_password` | password for the rspamd web interface | "Q1" |
+|`rspamd_dkim_key_length` | bit length of the rspamd dkim key| 2048 |
+|`rspamd_dkim_key_selector`| selector for the DKIM key | 2023 |
 
 ## Example Playbook
 
@@ -26,21 +35,24 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: jellyfish
       roles:
-         - { role: geekoops-clamav, fangfrisch_prefix="/opt/fangfrisch" }
+         - { role: geekoops-rspamd, rspamd_dkim_key_length="2048" }
 
 An advanced example for the imaginary `jellyfish` test server
 
     - hosts: jellyfish
       roles:
-         - role: geekoops-clamav
+         - role: geekoops-rspamd
            vars:
-             fangfrisch_prefix: "/opt/fangfrisch"
+             rspamd_dkim_key_length: "2048"
 
 ## License
 
 MIT
 
 # Development
+Some links:
+- https://thomas-leister.de/mailserver-debian-buster/
+- https://github.com/chkpnt/chkpnt-mailserver
 
 ## Add githooks
 
