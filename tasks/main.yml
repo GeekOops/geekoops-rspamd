@@ -130,6 +130,12 @@
     groups: redis
     append: yes
 
+- name: adding "{{ rspamd_user }}" to group vscan
+  user:
+    name: "{{ rspamd_user }}"
+    groups: vscan
+    append: yes
+
 - name: restart rspamd
   ansible.builtin.systemd:
     state: restarted
