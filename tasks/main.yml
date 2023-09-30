@@ -124,6 +124,12 @@
     - dkim_signing.conf
     - arc.conf
 
+- name: Enable Autolearning in rspamd
+  ansible.builtin.copy:
+    dest: "/etc/rspamd/local.d/classifier-bayes.conf"
+    content: |
+      autolearn = true;
+
 - name: adding "{{ rspamd_user }}" to group redis
   user:
     name: "{{ rspamd_user }}"
