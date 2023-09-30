@@ -1,6 +1,6 @@
 [![Test deployment](https://github.com/GeekOops/geekoops-rspamd/actions/workflows/CI.yml/badge.svg)](https://github.com/GeekOops/geekoops-rspamd/actions/workflows/CI.yml)
 
-# ansible role for setting up rspamd and unbond
+# ansible role for setting up rspamd and unbound
 
 Configurable ansible role for setting up unbound as a recursive caching DNS resolver and rspamd.
 rspamd triggers:
@@ -54,8 +54,6 @@ Some links:
 - https://thomas-leister.de/mailserver-debian-buster/
 - https://github.com/chkpnt/chkpnt-mailserver
 
-## Add githooks
-
-This repository ships pre-commit git hooks that will check the yaml syntax. To configure them do
-
-    git config --local core.hooksPath .githooks/
+# Notes
+rspamc learn_ham always failed for me even as root user. specifying secure_ip = "<my public IP>" in /etc/rspamd/local.d/worker-controller.inc
+made it work in dovecot.
