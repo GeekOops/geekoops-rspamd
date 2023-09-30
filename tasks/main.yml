@@ -127,6 +127,9 @@
 - name: Enable Autolearning in rspamd
   ansible.builtin.copy:
     dest: "/etc/rspamd/local.d/classifier-bayes.conf"
+    owner: root
+    group: _rspamd
+    mode: '0644'
     content: |
       autolearn = true;
 
