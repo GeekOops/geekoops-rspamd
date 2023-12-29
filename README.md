@@ -55,5 +55,6 @@ Some links:
 - https://github.com/chkpnt/chkpnt-mailserver
 
 # Notes
-rspamc learn_ham always failed for me even as root user. specifying secure_ip = "<my public IP>" in /etc/rspamd/local.d/worker-controller.inc
-made it work in dovecot.
+rspamc learn_ham always failed for me even as root user. 
+Specifying secure_ip = "<my public IP>" in /etc/rspamd/local.d/worker-controller.inc made it work in dovecot.
+A source for training data is here: https://spamassassin.apache.org/old/publiccorpus/ Note that currently rspamd needs 200 mails to start.
